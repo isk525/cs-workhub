@@ -589,4 +589,14 @@ function csCloseMenu(){document.getElementById('csSideNav').classList.remove('op
 function csGo(main,sub){var btn=csOriginalMain(main);if(btn&&typeof showTab==='function')showTab(main,btn);if(sub){var p=sub.split(':'),type=p[0],name=p[1],target=null;if(type==='customer'){target=csOriginalCustomer(name);if(target&&typeof showCustomerSubView==='function')showCustomerSubView(name,target)}else if(type==='facil'){target=csOriginalFacil(name);if(target&&typeof showFacilSection==='function')showFacilSection(name,target)}else if(type==='monitor'){target=csOriginalMonitor(name);if(target&&typeof showMonitorSubView==='function'){showMonitorSubView(name,target);if(name==='seminar'&&typeof renderSeminarPrefectureView==='function')renderSeminarPrefectureView();if(name==='schedule'){var m=document.getElementById('ssMonth');if(m&&typeof ssCurrentMonth==='function'&&!m.dataset.initialized){m.value=ssCurrentMonth();m.dataset.initialized='1'}if(typeof ssRender==='function')ssRender()}if(name==='callhistory'&&typeof renderCallHistory==='function')renderCallHistory()}}}csSetActive(main,sub||'');csCloseMenu();window.scrollTo({top:0,behavior:'instant'})}
 document.querySelectorAll('.cs-nav-main').forEach(function(b){b.addEventListener('click',function(){var defaults={customer:'customer:search',facil:'facil:support',monitor:'monitor:interest'};csGo(b.dataset.csMain,defaults[b.dataset.csMain]||'')})});document.querySelectorAll('.cs-nav-sub').forEach(function(b){b.addEventListener('click',function(){csGo(b.dataset.csMain,b.dataset.csSub)})});var menu=document.getElementById('csMobileMenu'),side=document.getElementById('csSideNav'),overlay=document.getElementById('csNavOverlay');if(menu)menu.onclick=function(){side.classList.toggle('open');overlay.classList.toggle('open')};if(overlay)overlay.onclick=csCloseMenu;
 window.csGo=csGo;csSetActive('tasks','');
+})();</script><script>(function(){'use strict';
+if(!('serviceWorker' in navigator))return;
+let registration=null;
+let reloading=false;
+async function checkCsWorkhubUpdate(){try{if(!registration)registration=await navigator.serviceWorker.register('./service-worker.js',{updateViaCache:'none'});await registration.update();if(registration.waiting)registration.waiting.postMessage({type:'SKIP_WAITING'})}catch(error){console.warn('CS業務ワークハブ更新確認:',error)}}
+navigator.serviceWorker.addEventListener('controllerchange',function(){if(reloading)return;reloading=true;location.reload()});
+window.addEventListener('load',async function(){await checkCsWorkhubUpdate();setInterval(checkCsWorkhubUpdate,300000)});
+document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')checkCsWorkhubUpdate()});
+window.addEventListener('online',checkCsWorkhubUpdate);
+window.checkCsWorkhubUpdate=checkCsWorkhubUpdate;
 })();</script></body></html>
