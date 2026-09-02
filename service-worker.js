@@ -1,4 +1,4 @@
-const CACHE_NAME = "cs-workhub-v1";
+const CACHE_NAME = "cs-workhub-v2";
 const APP_SHELL = [
   "./",
   "./index.html",
