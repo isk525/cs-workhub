@@ -1,0 +1,30 @@
+{
+  "name": "CS業務ワークハブ",
+  "short_name": "CSワークハブ",
+  "description": "自治体対応、顧客カルテ、利用関心度、勉強会日程、対応メモ、タスクを一元管理する業務ワークハブ",
+  "lang": "ja",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": [
+    "window-controls-overlay",
+    "standalone"
+  ],
+  "orientation": "any",
+  "background_color": "#f5f6f8",
+  "theme_color": "#ef7d22",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
