@@ -260,6 +260,11 @@ html[data-theme="dark"],html[data-theme="light"]{color-scheme:light!important}ht
 #customerCard .customer-extra-grid>.v293-seminar-reaction{grid-column:1/-1!important;width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important;margin:0!important;padding:14px 16px!important;display:block!important}
 #customerCard .customer-extra-grid>.v293-seminar-reaction>div{width:100%!important;max-width:none!important;white-space:pre-wrap!important;overflow-wrap:anywhere!important;word-break:break-word!important;line-height:1.65!important}
 #customerCard .customer-extra-grid>.v289-handover{grid-column:1/-1!important;width:100%!important;max-width:100%!important;box-sizing:border-box!important}
+</style><style id="csThemeV29_4">
+/* V29.4 limited fixes only */
+#customerCard .customer-hero>.v293-hero-contact{font-size:16px!important;font-weight:800!important;color:#253140!important;line-height:1.55!important;opacity:1!important;margin-top:5px!important}
+#customerCard .customer-hero>.v293-hero-contact *{font-size:16px!important;font-weight:800!important;color:#253140!important}
+#customerCard .customer-hero .segment-badge,#customerCard .customer-hero>[data-v294-segment],#customerCard .customer-hero>.v294-segment-wrapper{display:none!important}
 </style></head>
 <body>
 <button aria-label="メニューを開く" class="cs-mobile-menu" id="csMobileMenu" type="button">☰</button><div class="cs-nav-overlay" id="csNavOverlay"></div><aside class="cs-side-nav" id="csSideNav"><div class="cs-side-brand"><strong>CS業務ワークハブ</strong><small>メニュー</small></div>
@@ -1113,4 +1118,10 @@ function apply(){if(busy)return;busy=true;try{var r=root();if(!r)return;var reac
 function schedule(){clearTimeout(timer);timer=setTimeout(apply,80)}
 function init(){apply();var tab=document.getElementById('tab-customer');if(tab)new MutationObserver(schedule).observe(tab,{childList:true,subtree:true});document.addEventListener('click',function(e){if(e.target.closest('#customerList [data-cid],.ss-customer-link,.ss-calendar-customer,.v273-org-icon,.v26-call-link,.v25-call-municipality'))setTimeout(apply,140)})}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();</script><script id="csLogicV29_4">(function(){'use strict';
+function removeHeroSegmentV294(){var hero=document.querySelector('#customerCard .customer-hero');if(!hero)return;hero.querySelectorAll('.segment-badge').forEach(function(badge){var wrapper=badge.parentElement;if(wrapper&&wrapper!==hero&&wrapper.children.length===1)wrapper.remove();else badge.remove()})}
+function openAccessLogV294(e){if(e){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation()}if(typeof window.csGo==='function')window.csGo('db','');else{var tab=document.querySelector('.main-tab[data-tab="db"]');if(tab&&typeof window.showTab==='function')window.showTab('db',tab);document.querySelectorAll('.cs-nav-main').forEach(function(b){b.classList.toggle('active',b.dataset.csMain==='db')})}window.scrollTo({top:0,behavior:'instant'})}
+function bindAccessLogV294(){var monitor=document.querySelector('.cs-nav-main[data-cs-main="monitor"]')?.closest('.cs-nav-group');if(!monitor)return;var buttons=Array.from(monitor.querySelectorAll('.cs-nav-sub'));var access=buttons.find(function(b){return (b.textContent||'').trim()==='アクセスログ'});if(!access)return;access.dataset.csMain='db';access.dataset.csSub='';access.dataset.v294Access='1';access.onclick=openAccessLogV294;access.addEventListener('click',openAccessLogV294,true)}
+function initV294(){bindAccessLogV294();removeHeroSegmentV294();var card=document.getElementById('customerCard');if(card)new MutationObserver(function(){requestAnimationFrame(removeHeroSegmentV294)}).observe(card,{childList:true,subtree:true})}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initV294);else initV294();
 })();</script></body></html>
