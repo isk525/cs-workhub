@@ -234,6 +234,17 @@ html[data-theme="dark"],html[data-theme="light"]{color-scheme:light!important}ht
 </style><style id="csThemeV28_9">
 /* V28.9 customer handover note */
 .v289-handover{grid-column:1/-1!important;width:100%!important;margin:10px 0!important;padding:14px 16px!important;border:1px solid #efc79f!important;border-left:4px solid #de7624!important;border-radius:11px!important;background:#fffaf5!important;box-sizing:border-box!important}.v289-handover label{display:block!important;font-size:11px!important;font-weight:800!important;color:#985116!important;margin:0 0 6px!important}.v289-handover div{font-size:12.5px!important;line-height:1.7!important;color:#374151!important;white-space:pre-wrap!important;overflow-wrap:anywhere!important}.v289-empty{color:#9aa3ad!important}.v289-hide{display:none!important}
+</style><style id="csThemeV29_0">
+/* V29.0 regression fixes */
+.v289-handover{grid-column:1/-1!important;width:100%!important;margin:8px 0!important;padding:12px 14px!important;border:1px solid #dfe5eb!important;border-left:1px solid #dfe5eb!important;border-radius:10px!important;background:#f8f9fb!important;box-sizing:border-box!important}
+.v289-handover label{display:block!important;font-size:11px!important;font-weight:800!important;color:#667281!important;margin:0 0 6px!important}
+.v289-handover div{font-size:12.5px!important;line-height:1.7!important;color:#374151!important}
+.customer-extra-grid{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important;width:100%!important}
+.customer-extra-grid>.v289-handover{grid-column:1/-1!important}
+.customer-extra-grid>.customer-extra[data-v290-reaction],.customer-extra-grid>.customer-extra.v290-reaction{grid-column:1/-1!important;width:100%!important;min-width:0!important;margin:0!important;padding:12px 14px!important;box-sizing:border-box!important}
+.customer-extra-grid>.customer-extra[data-v290-reaction]>div,.customer-extra-grid>.customer-extra.v290-reaction>div{white-space:pre-wrap!important;overflow-wrap:anywhere!important;word-break:break-word!important;line-height:1.65!important}
+@media(max-width:1100px){.customer-extra-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:680px){.customer-extra-grid{grid-template-columns:1fr!important}}
 </style></head>
 <body>
 <button aria-label="メニューを開く" class="cs-mobile-menu" id="csMobileMenu" type="button">☰</button><div class="cs-nav-overlay" id="csNavOverlay"></div><aside class="cs-side-nav" id="csSideNav"><div class="cs-side-brand"><strong>CS業務ワークハブ</strong><small>メニュー</small></div>
@@ -1058,4 +1069,22 @@ function findDetail289(){return document.getElementById('customerCard')||documen
 function apply289(){var root=findDetail289(),c=selected289();if(!root||!c)return;root.querySelectorAll('.v289-handover').forEach(function(x){x.remove()});var candidates=Array.from(root.querySelectorAll('.customer-extra,.contact-field,.customer-field,.info-row,.customer-info-card,.customer-detail-card'));candidates.forEach(function(el){var label=cardLabel289(el);if(label==='部署名'||label==='部署'||label==='担当者名'||label==='担当者')el.classList.add('v289-hide')});var n=note289(c),box=document.createElement('div');box.className='customer-extra v289-handover';box.innerHTML='<label>備考（申し送り事項等）</label><div class="'+(!n?'v289-empty':'')+'">'+(n?esc289(n):'登録なし')+'</div>';var reaction=candidates.find(function(el){return cardLabel289(el)==='勉強会反応'});if(reaction&&reaction.parentNode)reaction.parentNode.insertBefore(box,reaction);else{var grid=root.querySelector('.customer-extra-grid');(grid||root).appendChild(box)}}
 function install289(){apply289();var tab=document.getElementById('tab-customer');if(tab)new MutationObserver(function(){clearTimeout(window.__v289);window.__v289=setTimeout(apply289,60)}).observe(tab,{childList:true,subtree:true});document.addEventListener('click',function(e){if(e.target.closest('#customerList [data-cid],.ss-customer-link,.ss-calendar-customer,.v273-org-icon,.v26-call-link'))setTimeout(apply289,120)})}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install289);else install289();
+})();</script><script id="csLogicV29_0">(function(){'use strict';
+function groupByMain(main){var b=document.querySelector('.cs-nav-main[data-cs-main="'+main+'"]');return b&&b.closest('.cs-nav-group')}
+function label(group){var b=group&&group.querySelector('.cs-nav-main');return b?(b.textContent||'').replace(/\s+/g,'').trim():''}
+function groupByText(text){return Array.from(document.querySelectorAll('#csSideNav .cs-nav-group')).find(function(g){return label(g).includes(text)})||null}
+function openMain(main,sub){if(typeof window.csGo==='function'){window.csGo(main,sub);return}var b=sub?document.querySelector('[data-cs-sub="'+sub+'"]'):document.querySelector('.cs-nav-main[data-cs-main="'+main+'"]');if(b)b.click()}
+function addSub(group,text,key,fn){if(!group)return;var list=group.querySelector('.cs-nav-sublist');if(!list){list=document.createElement('div');list.className='cs-nav-sublist';group.appendChild(list)}var existing=Array.from(list.querySelectorAll('.cs-nav-sub')).find(function(x){return x.textContent.trim()===text});if(existing){existing.onclick=fn;return}var b=document.createElement('button');b.type='button';b.className='cs-nav-sub';b.dataset.v290Sub=key;b.textContent=text;b.onclick=fn;list.appendChild(b)}
+function restoreSidebar(){var nav=document.getElementById('csSideNav');if(!nav)return;var tasks=groupByMain('tasks')||groupByText('タスク'),customer=groupByMain('customer')||groupByText('顧客カルテ'),notes=groupByMain('notes')||groupByText('対応メモ'),facil=groupByMain('facil')||groupByText('勉強会ファシリ'),monitor=groupByMain('monitor')||groupByText('モニタリング'),survey=groupByMain('survey')||groupByText('業務量調査'),links=groupByMain('links')||groupByText('リンク集'),calls=groupByMain('calls')||groupByText('TELトーク'),access=groupByMain('access')||groupByText('アクセスログ');
+ if(calls&&notes){addSub(notes,'TELトーク','calls',function(e){e.preventDefault();e.stopPropagation();openMain('calls')});calls.remove()}
+ if(access&&monitor){addSub(monitor,'アクセスログ','access',function(e){e.preventDefault();e.stopPropagation();openMain('access')});access.remove()}
+ [tasks,customer,notes,facil,monitor,survey,links].filter(Boolean).forEach(function(g){nav.appendChild(g)});
+}
+function norm(v){return String(v||'').normalize('NFKC').replace(/[\s　:：・／/()（）]/g,'').toLowerCase()}
+function fixCustomerLayout(){var root=document.getElementById('customerCard')||document.getElementById('customerDetail')||document.querySelector('#tab-customer .customer-card')||document.querySelector('#tab-customer .customer-panel:last-child');if(!root)return;var grid=root.querySelector('.customer-extra-grid')||root;var cards=Array.from(root.querySelectorAll('.customer-extra,.contact-field,.customer-field,.info-row,.customer-info-card,.customer-detail-card'));
+ cards.forEach(function(card){var labelEl=card.querySelector('label,.customer-extra-label,.contact-label,.info-label,strong')||card,label=norm(labelEl.textContent||'');if(label==='部署名'||label==='部署'||label==='担当者名'||label==='担当者')card.classList.add('v289-hide');if(label==='勉強会反応'){card.classList.add('v290-reaction');card.dataset.v290Reaction='1'}});
+ var handover=root.querySelector('.v289-handover'),reaction=root.querySelector('[data-v290-reaction],.v290-reaction');if(handover&&reaction&&handover.parentNode===reaction.parentNode&&handover.nextElementSibling!==reaction)reaction.parentNode.insertBefore(handover,reaction);
+}
+function init(){restoreSidebar();fixCustomerLayout();var tab=document.getElementById('tab-customer');if(tab)new MutationObserver(function(){clearTimeout(window.__v290);window.__v290=setTimeout(fixCustomerLayout,70)}).observe(tab,{childList:true,subtree:true})}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();</script></body></html>
