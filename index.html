@@ -1124,4 +1124,32 @@ function openAccessLogV294(e){if(e){e.preventDefault();e.stopPropagation();e.sto
 function bindAccessLogV294(){var monitor=document.querySelector('.cs-nav-main[data-cs-main="monitor"]')?.closest('.cs-nav-group');if(!monitor)return;var buttons=Array.from(monitor.querySelectorAll('.cs-nav-sub'));var access=buttons.find(function(b){return (b.textContent||'').trim()==='アクセスログ'});if(!access)return;access.dataset.csMain='db';access.dataset.csSub='';access.dataset.v294Access='1';access.onclick=openAccessLogV294;access.addEventListener('click',openAccessLogV294,true)}
 function initV294(){bindAccessLogV294();removeHeroSegmentV294();var card=document.getElementById('customerCard');if(card)new MutationObserver(function(){requestAnimationFrame(removeHeroSegmentV294)}).observe(card,{childList:true,subtree:true})}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initV294);else initV294();
+})();</script><script id="csLogicV29_5">(function(){'use strict';
+function cleanV295(value){return String(value==null?'':value).replace(/\r?\n/g,' / ').replace(/\t/g,' ').trim()}
+function copyFallbackV295(text){var area=document.createElement('textarea');area.value=text;area.style.position='fixed';area.style.opacity='0';document.body.appendChild(area);area.select();document.execCommand('copy');area.remove()}
+function copyOutV295(text){if(typeof window.copyText==='function'){window.copyText(text);return}if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).catch(function(){copyFallbackV295(text)});return}copyFallbackV295(text)}
+function visibleRowsV295(table){return Array.from(table.querySelectorAll('tbody tr')).filter(function(row){return !row.querySelector('.access-empty')&&row.offsetParent!==null})}
+window.copyMonitoring=function(){
+ var table=document.querySelector('#monitor-sub-interest table.monitor-table')||document.querySelector('#monitor-sub-interest table');
+ if(!table){alert('利用関心度の一覧表が見つかりません。');return}
+ var wanted=['自治体名','顧客区分','利用関心度','参加内容','点数','最終アクセス日','アクセス数','最終ログイン日','アカウント数'];
+ var headers=Array.from(table.querySelectorAll('thead th')).map(function(th){return cleanV295(th.textContent)});
+ var indexes=wanted.map(function(name){return headers.indexOf(name)});
+ var missing=wanted.filter(function(name,i){return indexes[i]<0});
+ if(missing.length){alert('コピー対象列が見つかりません：'+missing.join('、'));return}
+ var rows=visibleRowsV295(table);
+ if(!rows.length){alert('コピーするデータがありません。');return}
+ var interestIndex=wanted.indexOf('利用関心度');
+ var lines=[wanted.join('\t')];
+ rows.forEach(function(row){
+  var cells=Array.from(row.children);
+  var values=indexes.map(function(cellIndex,outputIndex){
+   var value=cells[cellIndex]?cleanV295(cells[cellIndex].innerText||cells[cellIndex].textContent):'';
+   if(outputIndex===interestIndex&&value.includes('未関心'))value=value.replace(/未関心/g,'未ログイン');
+   return value;
+  });
+  lines.push(values.join('\t'));
+ });
+ copyOutV295(lines.join('\n'));
+};
 })();</script></body></html>
