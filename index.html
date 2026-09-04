@@ -1133,4 +1133,19 @@ function participationV298(row,map){var cell=row.querySelector('[data-monitor-pa
 function fallbackV298(text){var a=document.createElement('textarea');a.value=text;a.readOnly=true;a.style.position='fixed';a.style.left='-9999px';document.body.appendChild(a);a.select();a.setSelectionRange(0,a.value.length);var ok=false;try{ok=document.execCommand('copy')}catch(e){}a.remove();return ok}
 async function writeV298(text){try{if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(text);return true}}catch(e){}return fallbackV298(text)}
 window.copyMonitoringV298=async function(){var table=document.querySelector('#monitor-sub-interest .monitor-table');if(!table){alert('利用関心度の一覧表が見つかりません。');return}var map=headerIndexV298(table),required=['自治体名','顧客区分','利用関心度','点数','最終アクセス日','アクセス数','最終ログイン日','アカウント数'],missing=required.filter(function(name){return !Number.isInteger(map[name])});if(missing.length){alert('コピー対象列が見つかりません：'+missing.join('、'));return}var rows=Array.from(table.querySelectorAll('tbody tr')).filter(function(row){return !row.querySelector('.access-empty')&&row.offsetParent!==null});if(!rows.length){alert('コピーするデータがありません。');return}var headers=['自治体名','顧客区分','利用関心度','参加内容','点数','最終アクセス日','アクセス数','最終ログイン日','アカウント数'],lines=[headers.join('\t')];rows.forEach(function(row){lines.push([cleanV298(cellV298(row,map,'自治体名')?.innerText),cleanV298(cellV298(row,map,'顧客区分')?.innerText),interestV298(cellV298(row,map,'利用関心度')),participationV298(row,map),cleanV298(cellV298(row,map,'点数')?.innerText),cleanV298(cellV298(row,map,'最終アクセス日')?.innerText),cleanV298(cellV298(row,map,'アクセス数')?.innerText),cleanV298(cellV298(row,map,'最終ログイン日')?.innerText),cleanV298(cellV298(row,map,'アカウント数')?.innerText)].join('\t'))});var ok=await writeV298(lines.join('\n'));alert(ok?'表示中の一覧をコピーしました。':'コピーできませんでした。ブラウザのクリップボード権限を確認してください。')};
-})();</script></body></html>
+})();document.addEventListener('keydown', function (e) {
+  if (e.key !== 'Enter') return;
+
+  const active = document.activeElement;
+  if (!active || active.id !== 'customerSearch') return;
+
+  const rows = Array.from(
+    document.querySelectorAll('#customerList .customer-row')
+  ).filter(row => row.offsetParent !== null);
+
+  if (rows.length === 1) {
+    e.preventDefault();
+    e.stopPropagation();
+    rows[0].click();
+  }
+});</script></body></html>
